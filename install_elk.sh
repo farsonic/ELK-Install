@@ -111,22 +111,6 @@ for FILE in kibana/*.ndjson; do
     done
 done
 
-# Additional step to download and import the Retransmit_dashboard.ndjson file
-echo "Downloading and importing Retransmit_dashboard.ndjson..."
-curl -s -O https://raw.githubusercontent.com/farsonic/ELK-Install/main/Retransmit_dashboard.ndjson
-while : ; do
-    RESPONSE=$(curl -s -X POST "http://localhost:5601/api/saved_objects/_import" -H "kbn-xsrf: true" --form file=@Retransmit_dashboard.ndjson)
-    if [[ $(echo "$RESPONSE" | jq -r '.success') == "true" ]]; then
-        IMPORTED_COUNT=$(echo "$RESPONSE" | jq '.successCount')
-        TOTAL_IMPORTED=$((TOTAL_IMPORTED + IMPORTED_COUNT))
-        echo "Successfully imported $IMPORTED_COUNT objects from Retransmit_dashboard.ndjson"
-        break  # Exit the loop if the import was successful
-    else
-        echo "Failed to import objects from Retransmit_dashboard.ndjson, retrying in 5 seconds..."
-        echo "Response: $RESPONSE" 
-        sleep 5  # Wait for 5 seconds before retrying
-    fi
-done
 
 echo "$TOTAL_IMPORTED objects were successfully imported into Kibana."
 
