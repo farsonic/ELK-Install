@@ -123,7 +123,7 @@ while : ; do
         break  # Exit the loop if the import was successful
     else
         echo "Failed to import objects from Retransmit_dashboard.ndjson, retrying in 5 seconds..."
-        echo "Response: $RESPONSE"  # Add this line to output the API response
+        echo "Response: $RESPONSE" 
         sleep 5  # Wait for 5 seconds before retrying
     fi
 done
