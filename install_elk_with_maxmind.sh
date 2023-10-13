@@ -65,6 +65,14 @@ read -p "Please enter the Elastic version you want to use (default: 8.6.2): " EL
 ELASTIC_VERSION=${ELASTIC_VERSION:-8.6.2}
 echo "TAG=$ELASTIC_VERSION" > .env
 
+# Prompt user for version with a default value
+read -p "Please enter the Elastiflow version you want to use (default: 6.3.5): " ELASTIFLOW_VERSION
+ELASTIFLOW_VERSION=${ELASTIFLOW_VERSION:-6.3.5}
+
+# Replace the version in the docker-compose.yml file
+sed -i "s|elastiflow/flow-collector:[^ ]*|elastiflow/flow-collector:$ELASTIFLOW_VERSION|" docker-compose.yml
+
+
 # Directory setup and permissions
 mkdir -p ./data/es_backups ./data/pensando_es ./data/elastiflow
 chmod -R 777 ./data
