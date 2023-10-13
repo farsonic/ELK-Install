@@ -6,11 +6,6 @@ if [[ "$(lsb_release -si)" != "Ubuntu" ]]; then
     exit 1
 fi
 
-# Check if elk-pensando directory already exists
-if [ -d "elk-pensando" ]; then
-    echo "The directory elk-pensando already exists. Aborting the installation."
-    exit 1
-fi
 
 # Check for minimum RAM requirement of 16GB
 TOTAL_RAM=$(free -m | awk '/^Mem:/{print $2}')
@@ -56,9 +51,19 @@ done
 
 echo "Selected branch: $BRANCH_NAME"
 
-# Clone the repository
-git clone -b $BRANCH_NAME https://gitlab.com/pensando/tbd/siem/elastic/elk-pensando.git
-cd elk-pensando
+REPO_DIR="elk-pensando"
+REPO_URL="https://gitlab.com/pensando/tbd/siem/elastic/elk-pensando.git"
+
+# Check if the directory exists
+if [ -d "$REPO_DIR" ]; then
+    echo "Local clone exists. Updating..."
+    cd $REPO_DIR
+    git pull origin $BRANCH_NAME
+else
+    echo "Cloning repository..."
+    git clone -b $BRANCH_NAME $REPO_URL
+    cd $REPO_DIR
+fi
 
 # Set the Elastic version, with a default known functional version of 8.6.2
 read -p "Please enter the Elastic version you want to use (default: 8.6.2): " ELASTIC_VERSION
@@ -107,14 +112,20 @@ while : ; do
     sleep 5
 done
 
-# Enable 30 day trial license
 echo "Configuring Elasticsearch 30 day trial license..."
+
 while : ; do
-    RESPONSE=$(curl -s -XPOST -H'Content-Type: application/json' ''http://localhost:9200/_license/start_trial?acknowledge=true')
-    if [[ $(echo "$RESPONSE" | jq -r '.acknowledged') == "true" ]]; then
+    RESPONSE=$(curl -s -XPOST -H 'Content-Type: application/json' 'http://localhost:9200/_license/start_trial?acknowledge=true')
+    
+    ACKNOWLEDGED=$(echo "$RESPONSE" | jq -r '.acknowledged')
+    
+    if [[ "$ACKNOWLEDGED" == "true" ]]; then
+        echo "Elasticsearch trial license configured successfully."
         break
+    else
+        echo "Waiting for Elasticsearch trial license to be configured..."
+        sleep 5
     fi
-    sleep 5
 done
 
 read -p "Do you want to install the maxmind databases? (y/n): " INSTALL_MAXMIND
