@@ -42,10 +42,16 @@ fi
 BRANCHES=$(git ls-remote --heads https://gitlab.com/pensando/tbd/siem/elastic/elk-pensando | awk -F'/' '{print $3}')
 
 echo "Available branches:"
-select BRANCH_NAME in $BRANCHES; do
-    if [[ -n $BRANCH_NAME ]]; then
-        break
-    fi
+
+while true; do
+    select BRANCH_NAME in $BRANCHES; do
+        if [[ -n $BRANCH_NAME ]]; then
+            break 2
+        else
+            echo "Invalid selection. Please choose a valid number from the list."
+            break
+        fi
+    done
 done
 
 echo "Selected branch: $BRANCH_NAME"
@@ -87,6 +93,16 @@ done
 echo "Configuring Elasticsearch index template..."
 while : ; do
     RESPONSE=$(curl -s -XPUT -H'Content-Type: application/json' 'http://localhost:9200/_index_template/pensando-fwlog?pretty' -d @./elasticsearch/pensando_fwlog_mapping.json)
+    if [[ $(echo "$RESPONSE" | jq -r '.acknowledged') == "true" ]]; then
+        break
+    fi
+    sleep 5
+done
+
+# Enable 30 day trial license
+echo "Configuring Elasticsearch 30 day trial license..."
+while : ; do
+    RESPONSE=$(curl -s -XPOST -H'Content-Type: application/json' ''http://localhost:9200/_license/start_trial?acknowledge=true')
     if [[ $(echo "$RESPONSE" | jq -r '.acknowledged') == "true" ]]; then
         break
     fi
