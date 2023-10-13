@@ -99,22 +99,31 @@ if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     
     # Downloading the files
     curl -o GeoLite2-ASN.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
-    curl -o GeoLite2-Country.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
+    curl -o GeoLite2-City.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
     
     # Modify the docker-compose.yml file
     sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_ENABLE: 'false'/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_ENABLE: 'true'/" docker-compose.yml
     sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_ENABLE: 'false'/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_ENABLE: 'true'/" docker-compose.yml
     sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_PATH: '/etc/elastiflow/maxmind/GeoLite2-City.mmdb'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_PATH: '/etc/elastiflow/maxmind/GeoLite2-City.mmdb'|" docker-compose.yml
     sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_PATH: '/etc/elastiflow/maxmind/GeoLite2-ASN.mmdb'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_PATH: '/etc/elastiflow/maxmind/GeoLite2-ASN.mmdb'|" docker-compose.yml
+    sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_VALUES: 'city,country,country_code,location,timezone'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_VALUES: 'city,country,country_code,location,timezone'|" docker-compose.yml
 
     # Create directory in elastiflow container and copy the files
     docker exec -it pensando-elastiflow mkdir -p /etc/elastiflow/maxmind
     docker cp GeoLite2-ASN.tar.gz pensando-elastiflow:/etc/elastiflow/maxmind/
-    docker cp GeoLite2-Country.tar.gz pensando-elastiflow:/etc/elastiflow/maxmind/
+    docker cp GeoLite2-City.tar.gz pensando-elastiflow:/etc/elastiflow/maxmind/
 
-    # Untar the files in the elastiflow container
-    docker exec -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
-    docker exec -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-Country.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
+    # Get the user ID and group ID of the user running inside the container
+    USER_ID=$(docker exec pensando-elastiflow id -u)
+    GROUP_ID=$(docker exec pensando-elastiflow id -g)
+    
+    # Change ownership of the files
+    docker exec -it pensando-elastiflow chown $USER_ID:$GROUP_ID /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz
+    docker exec -it pensando-elastiflow chown $USER_ID:$GROUP_ID /etc/elastiflow/maxmind/GeoLite2-City.tar.gz
+    
+    # Untar the files in the elastiflow container as that user
+    docker exec -u $USER_ID -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
+    docker exec -u $USER_ID -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-City.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
 
 fi
 
