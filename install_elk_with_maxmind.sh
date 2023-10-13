@@ -6,6 +6,12 @@ if [[ "$(lsb_release -si)" != "Ubuntu" ]]; then
     exit 1
 fi
 
+# Check if elk-pensando directory already exists
+if [ -d "elk-pensando" ]; then
+    echo "The directory elk-pensando already exists. Aborting the installation."
+    exit 1
+fi
+
 # Check for minimum RAM requirement of 16GB
 TOTAL_RAM=$(free -m | awk '/^Mem:/{print $2}')
 if (( TOTAL_RAM < 16384 )); then
@@ -18,12 +24,6 @@ ROOT_DISK_SPACE=$(df --output=size -BG / | tail -1 | tr -d 'G')
 if (( ROOT_DISK_SPACE < 500 )); then
     echo "Warning: Your system has less than the recommended 500GB of disk space ($ROOT_DISK_SPACE GB detected)."
     read -p "Acknowledge that 500GB or more of disk space is recommended before proceeding (y/n): " DISK_ACK
-fi
-
-# Check if elk-pensando directory already exists
-if [ -d "elk-pensando" ]; then
-    echo "The directory elk-pensando already exists. Aborting the installation."
-    exit 1
 fi
 
 # Install required tools and Docker
