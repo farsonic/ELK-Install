@@ -67,9 +67,6 @@ chmod -R 777 ./data
 sudo sysctl -w vm.max_map_count=262144
 echo vm.max_map_count=262144 | sudo tee -a /etc/sysctl.conf
 
-
-
-
 read -p "Are you going to collect IPFix packets? (y/n): " COLLECT_IPFIX
 if [ "$COLLECT_IPFIX" == "y" ]; then
     sed -i "s/EF_OUTPUT_ELASTICSEARCH_ENABLE: 'false'/EF_OUTPUT_ELASTICSEARCH_ENABLE: 'true'/" docker-compose.yml
@@ -115,8 +112,8 @@ if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     docker cp GeoLite2-Country.tar.gz elastiflow:/etc/elastiflow/maxmind/
 
     # Untar the files in the elastiflow container
-    docker exec -it elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz -C /etc/elastiflow/maxmind/"
-    docker exec -it elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-Country.tar.gz -C /etc/elastiflow/maxmind/"
+    docker exec -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz -C /etc/elastiflow/maxmind/"
+    docker exec -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-Country.tar.gz -C /etc/elastiflow/maxmind/"
 
 fi
 
