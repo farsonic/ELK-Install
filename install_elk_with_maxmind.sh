@@ -102,6 +102,7 @@ if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     curl -o GeoLite2-Country.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
     
     # Modify the docker-compose.yml file
+    sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_ENABLE: 'false'/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_ENABLE: 'true'/" docker-compose.yml
     sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_ENABLE: 'false'/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_ENABLE: 'true'/" docker-compose.yml
     sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_PATH: '/etc/elastiflow/maxmind/GeoLite2-City.mmdb'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_PATH: '/etc/elastiflow/maxmind/GeoLite2-City.mmdb'|" docker-compose.yml
     sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_PATH: '/etc/elastiflow/maxmind/GeoLite2-ASN.mmdb'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_PATH: '/etc/elastiflow/maxmind/GeoLite2-ASN.mmdb'|" docker-compose.yml
@@ -112,8 +113,8 @@ if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     docker cp GeoLite2-Country.tar.gz pensando-elastiflow:/etc/elastiflow/maxmind/
 
     # Untar the files in the elastiflow container
-    docker exec -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz -C /etc/elastiflow/maxmind/"
-    docker exec -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-Country.tar.gz -C /etc/elastiflow/maxmind/"
+    docker exec -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
+    docker exec -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-Country.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
 
 fi
 
