@@ -153,8 +153,8 @@ if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     GROUP_ID=$(docker exec pensando-elastiflow id -g)
     
     # Change ownership of the files
-    docker exec -it pensando-elastiflow chown $USER_ID:$GROUP_ID /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz
-    docker exec -it pensando-elastiflow chown $USER_ID:$GROUP_ID /etc/elastiflow/maxmind/GeoLite2-City.tar.gz
+    #docker exec -it pensando-elastiflow chown $USER_ID:$GROUP_ID /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz
+    #docker exec -it pensando-elastiflow chown $USER_ID:$GROUP_ID /etc/elastiflow/maxmind/GeoLite2-City.tar.gz
     
     # Untar the files in the elastiflow container as that user
     docker exec -u $USER_ID -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
