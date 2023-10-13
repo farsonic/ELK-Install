@@ -107,9 +107,9 @@ if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_PATH: '/etc/elastiflow/maxmind/GeoLite2-ASN.mmdb'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_PATH: '/etc/elastiflow/maxmind/GeoLite2-ASN.mmdb'|" docker-compose.yml
 
     # Create directory in elastiflow container and copy the files
-    docker exec -it elastiflow mkdir -p /etc/elastiflow/maxmind
-    docker cp GeoLite2-ASN.tar.gz elastiflow:/etc/elastiflow/maxmind/
-    docker cp GeoLite2-Country.tar.gz elastiflow:/etc/elastiflow/maxmind/
+    docker exec -it pensando-elastiflow mkdir -p /etc/elastiflow/maxmind
+    docker cp GeoLite2-ASN.tar.gz pensando-elastiflow:/etc/elastiflow/maxmind/
+    docker cp GeoLite2-Country.tar.gz pensando-elastiflow:/etc/elastiflow/maxmind/
 
     # Untar the files in the elastiflow container
     docker exec -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz -C /etc/elastiflow/maxmind/"
