@@ -138,7 +138,7 @@ done
 
 echo "$TOTAL_IMPORTED objects were successfully imported into Kibana."
 
-"======================== Setup Complete ========================"
+echo "======================== Setup Complete ========================"
 echo "Access Kibana: http://<IP-Address>:5601 to view CX10000 data."
 echo ""
 echo "---------------------- Configuration Steps ---------------------"
