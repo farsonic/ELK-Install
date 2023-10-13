@@ -41,11 +41,15 @@ fi
 # Fetch the available branches
 BRANCHES=$(git ls-remote --heads https://gitlab.com/pensando/tbd/siem/elastic/elk-pensando | awk -F'/' '{print $3}')
 
-echo "Available branches:"
-select BRANCH_NAME in $BRANCHES; do
-    if [[ -n $BRANCH_NAME ]]; then
-        break
-    fi
+while true; do
+    select BRANCH_NAME in $BRANCHES; do
+        if [[ -n $BRANCH_NAME ]]; then
+            break 2
+        else
+            echo "Invalid selection. Please choose a valid number from the list."
+            break
+        fi
+    done
 done
 
 echo "Selected branch: $BRANCH_NAME"
