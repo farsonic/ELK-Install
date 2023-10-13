@@ -67,29 +67,7 @@ chmod -R 777 ./data
 sudo sysctl -w vm.max_map_count=262144
 echo vm.max_map_count=262144 | sudo tee -a /etc/sysctl.conf
 
-read -p "Do you want to install the maxmind databases? (y/n): " INSTALL_MAXMIND
-if [[ "$INSTALL_MAXMIND" == "y" ]]; then
-    read -p "Enter your Maxmind API Key: " MAXMIND_API_KEY
-    
-    # Downloading the files
-    curl -o GeoLite2-ASN.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
-    curl -o GeoLite2-Country.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
-    
-    # Modify the docker-compose.yml file
-    sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_ENABLE: 'false'/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_ENABLE: 'true'/" docker-compose.yml
-    sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_PATH: '/etc/elastiflow/maxmind/GeoLite2-City.mmdb'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_PATH: '/etc/elastiflow/maxmind/GeoLite2-City.mmdb'|" docker-compose.yml
-    sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_PATH: '/etc/elastiflow/maxmind/GeoLite2-ASN.mmdb'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_PATH: '/etc/elastiflow/maxmind/GeoLite2-ASN.mmdb'|" docker-compose.yml
 
-    # Create directory in elastiflow container and copy the files
-    docker exec -it elastiflow mkdir -p /etc/elastiflow/maxmind
-    docker cp GeoLite2-ASN.tar.gz elastiflow:/etc/elastiflow/maxmind/
-    docker cp GeoLite2-Country.tar.gz elastiflow:/etc/elastiflow/maxmind/
-
-    # Untar the files in the elastiflow container
-    docker exec -it elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz -C /etc/elastiflow/maxmind/"
-    docker exec -it elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-Country.tar.gz -C /etc/elastiflow/maxmind/"
-
-fi
 
 
 read -p "Are you going to collect IPFix packets? (y/n): " COLLECT_IPFIX
@@ -117,6 +95,30 @@ while : ; do
     fi
     sleep 5
 done
+
+read -p "Do you want to install the maxmind databases? (y/n): " INSTALL_MAXMIND
+if [[ "$INSTALL_MAXMIND" == "y" ]]; then
+    read -p "Enter your Maxmind API Key: " MAXMIND_API_KEY
+    
+    # Downloading the files
+    curl -o GeoLite2-ASN.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
+    curl -o GeoLite2-Country.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
+    
+    # Modify the docker-compose.yml file
+    sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_ENABLE: 'false'/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_ENABLE: 'true'/" docker-compose.yml
+    sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_PATH: '/etc/elastiflow/maxmind/GeoLite2-City.mmdb'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_PATH: '/etc/elastiflow/maxmind/GeoLite2-City.mmdb'|" docker-compose.yml
+    sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_PATH: '/etc/elastiflow/maxmind/GeoLite2-ASN.mmdb'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_PATH: '/etc/elastiflow/maxmind/GeoLite2-ASN.mmdb'|" docker-compose.yml
+
+    # Create directory in elastiflow container and copy the files
+    docker exec -it elastiflow mkdir -p /etc/elastiflow/maxmind
+    docker cp GeoLite2-ASN.tar.gz elastiflow:/etc/elastiflow/maxmind/
+    docker cp GeoLite2-Country.tar.gz elastiflow:/etc/elastiflow/maxmind/
+
+    # Untar the files in the elastiflow container
+    docker exec -it elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz -C /etc/elastiflow/maxmind/"
+    docker exec -it elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-Country.tar.gz -C /etc/elastiflow/maxmind/"
+
+fi
 
 # Import all Kibana saved objects and display count of successfully imported objects
 echo "Importing Kibana saved objects from elk-pensando/kibana..."
