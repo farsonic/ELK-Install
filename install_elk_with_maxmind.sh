@@ -112,15 +112,13 @@ while : ; do
     sleep 5
 done
 
-echo "Configuring Elasticsearch 30 day trial license..."
-
 while : ; do
     RESPONSE=$(curl -s -XPOST -H 'Content-Type: application/json' 'http://localhost:9200/_license/start_trial?acknowledge=true')
     
     ACKNOWLEDGED=$(echo "$RESPONSE" | jq -r '.acknowledged')
     
     if [[ "$ACKNOWLEDGED" == "true" ]]; then
-        echo "Elasticsearch trial license configured successfully."
+        echo "Elasticsearch trial license installed successfully."
         break
     else
         echo "Waiting for Elasticsearch trial license to be configured..."
@@ -166,7 +164,7 @@ fi
 echo "Importing Kibana saved objects from elk-pensando/kibana..."
 TOTAL_IMPORTED=0
 for FILE in kibana/*.ndjson; do
-    while : ; do  # This creates an infinite loop for each file
+    while : ; do  #
         RESPONSE=$(curl -s -X POST "http://localhost:5601/api/saved_objects/_import" -H "kbn-xsrf: true" --form file=@$FILE)
         if [[ $(echo "$RESPONSE" | jq -r '.success') == "true" ]]; then
             IMPORTED_COUNT=$(echo "$RESPONSE" | jq '.successCount')
@@ -174,8 +172,14 @@ for FILE in kibana/*.ndjson; do
             echo "Successfully imported $IMPORTED_COUNT objects from $FILE"
             break  # Exit the loop if the import was successful
         else
-            echo "Failed to import objects from $FILE, retrying in 5 seconds..."
-            sleep 5  # Wait for 5 seconds before retrying
+            ERROR_MESSAGE=$(echo "$RESPONSE" | jq -r '.errors[0].error.message')
+            if [[ $ERROR_MESSAGE == *"already exists"* ]]; then
+                echo "Objects in $FILE already exist. Skipping..."
+                break
+            else
+                echo "Failed to import objects from $FILE, retrying in 5 seconds..."
+                sleep 5  # Wait for 5 seconds before retrying
+            fi
         fi
     done
 done
