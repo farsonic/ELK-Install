@@ -156,6 +156,29 @@ if [[ "$INSTALL_MAXMIND" == "y" ]]; then
 
 fi
 
+read -p "Do you want to install RiskIQ Components? (y/n): " INSTALL_RISKIQ
+if [[ "$INSTALL_RISKIQ" == "y" ]]; then
+    read -p "Enter your RiskIQ Account Number: " RISKIQ_ACCOUNT
+    read -p "Enter your RiskIQ Account Email: " RISKIQ_EMAIL
+    read -p "Enter your RiskIQ Account Encryption Key: " RISKIQ_ENCRYPTION_KEY
+    read -p "Enter your RiskIQ Account UUID: " RISKIQ_UUID
+    read -p "Enter your RiskIQ License API Key: " RISKIQ_API_KEY
+
+    # Modify the docker-compose.yml file
+    sed -i "s|EF_FLOW_OUTPUT_RISKIQ_ENABLE: 'false'|EF_OUTPUT_RISKIQ_ENABLE: 'true'|g" docker-compose.yml
+    sed -i "s|#EF_FLOW_OUTPUT_RISKIQ_HOST:'|EF_OUTPUT_RISKIQ_HOST: 'flow.riskiq.net'|g" docker-compose.yml
+    sed -i "s|#EF_FLOW_OUTPUT_RISKIQ_PORT:'|EF_OUTPUT_RISKIQ_PORT: 20000'|g" docker-compose.yml
+    sed -i "s|#EF_ACCOUNT_ID: ''|EF_ACCOUNT_ID: '$RISKIQ_ACCOUNT'|g" docker-compose.yml
+    sed -i "s|#EF_FLOW_OUTPUT_RISKIQ_CUSTOMER_UUID: ''|EF_OUTPUT_RISKIQ_CUSTOMER_UUID: '$RISKIQ_UUID'|g" docker-compose.yml
+    sed -i "s|#EF_FLOW_OUTPUT_RISKIQ_CUSTOMER_ENCRYPTION_KEY: ''|EF_OUTPUT_RISKIQ_CUSTOMER_ENCRYPTION_KEY: '$RISKIQ_ENCRYPTION_KEY'|g" docker-compose.yml
+    sed -i "s|EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_THREAT_ENABLE: 'false'|EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_THREAT_ENABLE: 'true'|g" docker-compose.yml
+    sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_API_USER: ''|EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_API_USER: '$RISKIQ_EMAIL'|g" docker-compose.yml
+    sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_API_KEY: ''|EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_API_KEY: '$RISKIQ_API_KEY'|g" docker-compose.yml
+fi
+
+    
+
+
 # Import all Kibana saved objects and display count of successfully imported objects
 echo "Importing Kibana saved objects from elk-pensando/kibana..."
 TOTAL_IMPORTED=0
