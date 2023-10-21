@@ -30,7 +30,7 @@ if ! command -v docker &>/dev/null; then
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo apt-get update
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose jq
     sudo usermod -aG docker $USER
     newgrp docker
     ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
@@ -166,7 +166,11 @@ if [[ "$INSTALL_RISKIQ" == "y" ]]; then
     read -p "Enter your RiskIQ Account Email: " RISKIQ_EMAIL
     read -p "Enter your RiskIQ Account Encryption Key: " RISKIQ_ENCRYPTION_KEY
     read -p "Enter your RiskIQ Account UUID: " RISKIQ_UUID
-    read -p "Enter your RiskIQ License API Key: " RISKIQ_API_KEY
+    read -p "Enter your RiskIQ API Key: " RISKIQ_API_KEY
+    read -p "Enter your RiskIQ License Key: " RISKIQ_LICENSE_KEY
+
+
+    #EF_FLOW_LICENSE_KEY: ''
 
     # Modify the docker-compose.yml file
     sed -i "s|EF_FLOW_OUTPUT_RISKIQ_ENABLE: 'false'|EF_OUTPUT_RISKIQ_ENABLE: 'true'|g" docker-compose.yml
@@ -178,6 +182,7 @@ if [[ "$INSTALL_RISKIQ" == "y" ]]; then
     sed -i "s|EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_THREAT_ENABLE: 'false'|EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_THREAT_ENABLE: 'true'|g" docker-compose.yml
     sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_API_USER: ''|EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_API_USER: '$RISKIQ_EMAIL'|g" docker-compose.yml
     sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_API_KEY: ''|EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_API_KEY: '$RISKIQ_API_KEY'|g" docker-compose.yml
+    sed -i "s|#EF_FLOW_LICENSE_KEY: ''|#EF_FLOW_LICENSE_KEY: '$RISKIQ_LICENSE_KEY'|g" docker-compose.yml
 fi
 
     
