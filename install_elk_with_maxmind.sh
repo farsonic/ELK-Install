@@ -169,9 +169,6 @@ if [[ "$INSTALL_RISKIQ" == "y" ]]; then
     read -p "Enter your RiskIQ API Key: " RISKIQ_API_KEY
     read -p "Enter your RiskIQ License Key: " RISKIQ_LICENSE_KEY
 
-
-    #EF_FLOW_LICENSE_KEY: ''
-
     # Modify the docker-compose.yml file
     sed -i "s|EF_FLOW_OUTPUT_RISKIQ_ENABLE: 'false'|EF_OUTPUT_RISKIQ_ENABLE: 'true'|g" docker-compose.yml
     sed -i "s|#EF_FLOW_OUTPUT_RISKIQ_HOST:'|EF_OUTPUT_RISKIQ_HOST: 'flow.riskiq.net'|g" docker-compose.yml
@@ -184,9 +181,6 @@ if [[ "$INSTALL_RISKIQ" == "y" ]]; then
     sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_API_KEY: ''|EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_API_KEY: '$RISKIQ_API_KEY'|g" docker-compose.yml
     sed -i "s|#EF_FLOW_LICENSE_KEY: ''|#EF_FLOW_LICENSE_KEY: '$RISKIQ_LICENSE_KEY'|g" docker-compose.yml
 fi
-
-    
-
 
 # Import all Kibana saved objects and display count of successfully imported objects
 echo "Importing Kibana saved objects from elk-pensando/kibana..."
