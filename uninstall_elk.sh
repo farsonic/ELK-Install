@@ -10,7 +10,7 @@ fi
 
 # Ensure the script is being run on Ubuntu
 if [[ "$(lsb_release -si)" != "Ubuntu" ]]; then
-    echo "This script is designed for Ubuntu. Exiting."
+    echo "This script is designed for Ubuntu Server. Exiting."
     exit 1
 fi
 
