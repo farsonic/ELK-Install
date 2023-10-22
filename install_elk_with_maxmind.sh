@@ -170,12 +170,12 @@ if [[ "$INSTALL_RISKIQ" == "y" ]]; then
     #read -p "Enter your RiskIQ License Key: " RISKIQ_LICENSE_KEY
 
     # Modify the docker-compose.yml file
-    sed -i "s|EF_FLOW_OUTPUT_RISKIQ_ENABLE: 'false'|EF_OUTPUT_RISKIQ_ENABLE: 'true'|g" docker-compose.yml
-    sed -i "s|#EF_FLOW_OUTPUT_RISKIQ_HOST:'|EF_OUTPUT_RISKIQ_HOST: 'flow.riskiq.net'|g" docker-compose.yml
-    sed -i "s|#EF_FLOW_OUTPUT_RISKIQ_PORT:'|EF_OUTPUT_RISKIQ_PORT: 20000'|g" docker-compose.yml
-    #sed -i "s|#EF_ACCOUNT_ID: ''|EF_ACCOUNT_ID: '$RISKIQ_ACCOUNT'|g" docker-compose.yml
-    sed -i "s|#EF_FLOW_OUTPUT_RISKIQ_CUSTOMER_UUID: ''|EF_OUTPUT_RISKIQ_CUSTOMER_UUID: '$RISKIQ_UUID'|g" docker-compose.yml
-    sed -i "s|#EF_FLOW_OUTPUT_RISKIQ_CUSTOMER_ENCRYPTION_KEY: ''|EF_OUTPUT_RISKIQ_CUSTOMER_ENCRYPTION_KEY: '$RISKIQ_ENCRYPTION_KEY'|g" docker-compose.yml
+    sed -i "s|EF_OUTPUT_RISKIQ_ENABLE: 'false'|EF_OUTPUT_RISKIQ_ENABLE: 'true'|g" docker-compose.yml
+    sed -i "s|#EF_OUTPUT_RISKIQ_HOST:'|EF_OUTPUT_RISKIQ_HOST: 'flow.riskiq.net'|g" docker-compose.yml
+    sed -i "s|#EF_OUTPUT_RISKIQ_PORT:'|EF_OUTPUT_RISKIQ_PORT: 20000'|g" docker-compose.yml
+    sed -i "s|EF_OUTPUT_RISKIQ_ENABLE: 'false'|EF_OUTPUT_RISKIQ_ENABLE: 'true'|g" docker-compose.yml
+    sed -i "s|#EF_OUTPUT_RISKIQ_CUSTOMER_UUID: ''|EF_OUTPUT_RISKIQ_CUSTOMER_UUID: '$RISKIQ_UUID'|g" docker-compose.yml
+    sed -i "s|#EF_OUTPUT_RISKIQ_CUSTOMER_ENCRYPTION_KEY: ''|EF_OUTPUT_RISKIQ_CUSTOMER_ENCRYPTION_KEY: '$RISKIQ_ENCRYPTION_KEY'|g" docker-compose.yml
     sed -i "s|EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_THREAT_ENABLE: 'false'|EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_THREAT_ENABLE: 'true'|g" docker-compose.yml
     sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_API_USER: ''|EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_API_USER: '$RISKIQ_EMAIL'|g" docker-compose.yml
     sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_API_KEY: ''|EF_PROCESSOR_ENRICH_IPADDR_RISKIQ_API_KEY: '$RISKIQ_API_KEY'|g" docker-compose.yml
