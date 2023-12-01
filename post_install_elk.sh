@@ -1,3 +1,5 @@
+docker-compose up --detach
+
 # Wait for Elasticsearch to become available
 echo "Waiting for Elasticsearch to become available..."
 while ! curl -s "http://localhost:9200/" &>/dev/null; do

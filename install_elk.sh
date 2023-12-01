@@ -81,6 +81,5 @@ fi
 
 sudo usermod -aG docker $(whoami)
 
-# Use newgrp to apply group changes immediately
-exec sg docker "docker-compose up --detach"
+echo "Log out and back in to refresh groups, then run the post_install script. Remember to be in the elk_pensando directory"
 
