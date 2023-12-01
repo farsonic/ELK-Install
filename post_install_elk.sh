@@ -1,3 +1,10 @@
+if id $(whoami) | grep -q 'docker'; then
+    echo "User is a member of the docker group."
+else
+    echo "User is NOT a member of the docker group. Exiting."
+    exit 1
+fi
+
 read -p "Do you want to install the maxmind databases? (y/n): " INSTALL_MAXMIND
 if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     read -p "Enter your Maxmind API Key: " MAXMIND_API_KEY
