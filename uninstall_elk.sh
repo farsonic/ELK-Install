@@ -42,6 +42,6 @@ fi
 # Revert system changes
 sudo sed -i '/vm.max_map_count=262144/d' /etc/sysctl.conf
 sudo sysctl -w vm.max_map_count=$(cat /proc/sys/vm/max_map_count)
-sudo usermod -G $(groups $(whoami) | sed 's/ /\,/g' | sed 's/,docker//g' | cut -d: -f2 | sed 's/^ //') $(whoami)
+sudo usermod -G $(groups $(whoami) | sed -e 's/^.*: //' -e 's/ /\,/g' | tr ',' '\n' | grep -v docker | tr '\n' ',' | sed 's/,$//') $(whoami)
 
 echo "Uninstallation completed!"
