@@ -43,3 +43,12 @@ of the docker group.
 ```
 bash <(curl -s https://raw.githubusercontent.com/farsonic/ELK-Install/main/uninstall_elk.sh)
 ```
+
+## Video Walkthrough
+
+[<img src="https://img.youtube.com/vi/xRz7pJD_FEg/maxresdefault.jpg" width="50%">](https://youtu.be/xRz7pJD_FEg)
+
+## Disclaimer
+
+This is just a quick script to install the ELK-Pensando software from an existing repo. It has had minimal testing and 
+is provided as is. 
