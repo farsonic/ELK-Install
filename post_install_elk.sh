@@ -5,6 +5,15 @@ else
     exit 1
 fi
 
+current_dir=$(basename "$PWD")
+
+if [ "$current_dir" = "elk-pensando" ]; then
+    echo "Current directory is 'elk-pensando'."
+else
+    echo "Current directory is not 'elk-pensando'. Exiting."
+    exit 1
+fi
+
 read -p "Do you want to install the maxmind databases? (y/n): " INSTALL_MAXMIND
 if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     read -p "Enter your Maxmind API Key: " MAXMIND_API_KEY
