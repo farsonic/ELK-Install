@@ -78,8 +78,12 @@ if [ "$COLLECT_IPFIX" == "y" ]; then
     sed -i "s/CHANGEME:9200/$SYSTEM_IP:9200/" docker-compose.yml
 fi
 
-# Run the containers
-docker-compose up --detach
+
+sudo usermod -aG docker $(whoami)
+
+# Use newgrp to apply group changes immediately and run the containers
+exec sg docker "docker-compose up --detach"
+
 
 # Wait for Elasticsearch to become available
 echo "Waiting for Elasticsearch to become available..."
