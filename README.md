@@ -30,11 +30,11 @@ This script wil make required changes to the docker-compose.yml file prior to st
 a few additional components that can be installed that will require additional licenses or keys to be provided, but 
 these are all optional. Go to the following sites to request or obtain a license key. 
 
-https://www.maxmind.com/en/account/login
+https://www.maxmind.com/en/account/login  (Provides geo-ip information)
 
-https://community.riskiq.com/login
+https://community.riskiq.com/login        (Community threat intelligence)
 
-https://www.elastiflow.com/get-started
+https://www.elastiflow.com/get-started    (Elastiflow licensing for IPFIX enrichment)
 
 ## Uninstallation and software removal 
 To remove all software components and return the system to the original state execute the following command as a member
