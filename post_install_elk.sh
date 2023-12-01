@@ -1,35 +1,3 @@
-docker-compose up --detach
-
-# Wait for Elasticsearch to become available
-echo "Waiting for Elasticsearch to become available..."
-while ! curl -s "http://localhost:9200/" &>/dev/null; do
-    sleep 5
-done
-
-# Configure the Elasticsearch index template
-echo "Configuring Elasticsearch index template..."
-while : ; do
-    RESPONSE=$(curl -s -XPUT -H'Content-Type: application/json' 'http://localhost:9200/_index_template/pensando-fwlog?pretty' -d @./elasticsearch/pensando_fwlog_mapping.json)
-    if [[ $(echo "$RESPONSE" | jq -r '.acknowledged') == "true" ]]; then
-        break
-    fi
-    sleep 5
-done
-
-while : ; do
-    RESPONSE=$(curl -s -XPOST -H 'Content-Type: application/json' 'http://localhost:9200/_license/start_trial?acknowledge=true')
-    
-    ACKNOWLEDGED=$(echo "$RESPONSE" | jq -r '.acknowledged')
-    
-    if [[ "$ACKNOWLEDGED" == "true" ]]; then
-        echo "Elasticsearch trial license installed successfully."
-        break
-    else
-        echo "Waiting for Elasticsearch trial license to be configured..."
-        sleep 5
-    fi
-done
-
 read -p "Do you want to install the maxmind databases? (y/n): " INSTALL_MAXMIND
 if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     read -p "Enter your Maxmind API Key: " MAXMIND_API_KEY
@@ -91,6 +59,40 @@ if [[ "$LICENSE_ELASTIFLOW" == "y" ]]; then
 
 
 fi
+
+docker-compose up --detach
+
+# Wait for Elasticsearch to become available
+echo "Waiting for Elasticsearch to become available..."
+while ! curl -s "http://localhost:9200/" &>/dev/null; do
+    sleep 5
+done
+
+# Configure the Elasticsearch index template
+echo "Configuring Elasticsearch index template..."
+while : ; do
+    RESPONSE=$(curl -s -XPUT -H'Content-Type: application/json' 'http://localhost:9200/_index_template/pensando-fwlog?pretty' -d @./elasticsearch/pensando_fwlog_mapping.json)
+    if [[ $(echo "$RESPONSE" | jq -r '.acknowledged') == "true" ]]; then
+        break
+    fi
+    sleep 5
+done
+
+while : ; do
+    RESPONSE=$(curl -s -XPOST -H 'Content-Type: application/json' 'http://localhost:9200/_license/start_trial?acknowledge=true')
+    
+    ACKNOWLEDGED=$(echo "$RESPONSE" | jq -r '.acknowledged')
+    
+    if [[ "$ACKNOWLEDGED" == "true" ]]; then
+        echo "Elasticsearch trial license installed successfully."
+        break
+    else
+        echo "Waiting for Elasticsearch trial license to be configured..."
+        sleep 5
+    fi
+done
+
+
 
 # Import all Kibana saved objects and display count of successfully imported objects
 echo "Importing Kibana saved objects from elk-pensando/kibana..."
