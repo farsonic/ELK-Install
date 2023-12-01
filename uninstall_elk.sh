@@ -32,6 +32,8 @@ sudo apt-get autoremove -y
 sudo rm /etc/apt/keyrings/docker.gpg
 sudo rm /etc/apt/sources.list.d/docker.list
 
+cd 
+
 # Remove the cloned Git repository
 if [ -d "elk-pensando" ]; then
     rm -rf elk-pensando
