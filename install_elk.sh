@@ -71,14 +71,6 @@ chmod -R 777 ./data
 sudo sysctl -w vm.max_map_count=262144
 echo vm.max_map_count=262144 | sudo tee -a /etc/sysctl.conf
 
-read -p "Are you going to collect IPFix packets? (y/n): " COLLECT_IPFIX
-if [ "$COLLECT_IPFIX" == "y" ]; then
-    sed -i "s/EF_OUTPUT_ELASTICSEARCH_ENABLE: 'false'/EF_OUTPUT_ELASTICSEARCH_ENABLE: 'true'/" docker-compose.yml
-    read -p "Enter the IP address of your system (This needs to be reachable from dataplane interface on CX10000: " SYSTEM_IP
-    sed -i "s/CHANGEME:9200/$SYSTEM_IP:9200/" docker-compose.yml
-fi
-
-
 sudo usermod -aG docker $(whoami)
 
 echo "Log out and back in to refresh groups, then run the post_install script. Remember to be in the elk_pensando directory"

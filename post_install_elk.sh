@@ -14,6 +14,14 @@ else
     exit 1
 fi
 
+
+read -p "Are you going to collect IPFix packets? (y/n): " COLLECT_IPFIX
+if [ "$COLLECT_IPFIX" == "y" ]; then
+    sed -i "s/EF_OUTPUT_ELASTICSEARCH_ENABLE: 'false'/EF_OUTPUT_ELASTICSEARCH_ENABLE: 'true'/" docker-compose.yml
+    read -p "Enter the IP address of your system (This needs to be reachable from dataplane interface on CX10000: " SYSTEM_IP
+    sed -i "s/CHANGEME:9200/$SYSTEM_IP:9200/" docker-compose.yml
+fi
+
 read -p "Do you want to install the maxmind databases? (y/n): " INSTALL_MAXMIND
 if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     read -p "Enter your Maxmind API Key: " MAXMIND_API_KEY
