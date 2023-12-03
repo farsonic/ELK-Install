@@ -29,7 +29,7 @@ if [ "$COLLECT_IPFIX" == "y" ]; then
     sed -i "s/EF_OUTPUT_ELASTICSEARCH_ENABLE: 'false'/EF_OUTPUT_ELASTICSEARCH_ENABLE: 'true'/" docker-compose.yml
 
     # List available Ethernet interfaces with their IP addresses, matching on ens or eth interfaces
-    echo "Available Ethernet interfaces:"
+    echo "Select the interface to listen on for SYSLOG and IPFIX - this should be reachable in-band from the CX10000:"
     interfaces=($(ip -4 addr show | grep -E 'ens|eth' | awk '$1 != "inet" && $1 != "inet6" {print $2}'))
 
     counter=1
