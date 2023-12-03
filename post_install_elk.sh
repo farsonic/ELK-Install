@@ -28,19 +28,21 @@ if [ "$COLLECT_IPFIX" == "y" ]; then
     # Enable Elasticsearch output in docker-compose.yml
     sed -i "s/EF_OUTPUT_ELASTICSEARCH_ENABLE: 'false'/EF_OUTPUT_ELASTICSEARCH_ENABLE: 'true'/" docker-compose.yml
 
-    # List available Ethernet interfaces
     echo "Available Ethernet interfaces:"
-    ip -br link show | awk '$1 !~ /^lo/ {print $1}'
+    interfaces=($(ip -4 addr | awk '/inet/ && !/docker0|lo/ {print $2 " " $NF}'))
+    for i in "${!interfaces[@]}"; do
+        echo "$((i+1))) ${interfaces[$i]}"
+    done
 
-    # Ask the user to choose an interface
-    read -p "Enter the interface to listen on: " INTERFACE_NAME
+    read -p "Select the interface number: " choice
+    selected_interface=${interfaces[$((choice-1))]}
 
-    # Get the IP address of the chosen interface
-    SYSTEM_IP=$(ip -4 addr show $INTERFACE_NAME | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+    # Extract just the IP address from the selection
+    SYSTEM_IP=$(echo $selected_interface | cut -d'/' -f1)
 
     # Check if an IP address was found
     if [ -z "$SYSTEM_IP" ]; then
-        echo "No IP address found for the interface. Exiting."
+        echo "No valid IP address found for the selected interface. Exiting."
         exit 1
     fi
 
