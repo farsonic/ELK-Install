@@ -7,10 +7,10 @@ fi
 
 current_dir=$(basename "$PWD")
 
-if [ "$current_dir" = "elk-pensando" ]; then
-    echo "Current directory is 'elk-pensando'."
+if [ "$current_dir" = "pensando-elk" ]; then
+    echo "Current directory is 'pensando-elk'."
 else
-    echo "Current directory is not 'elk-pensando'. Exiting."
+    echo "Current directory is not 'pensando-elk'. Exiting."
     exit 1
 fi
 
@@ -152,7 +152,7 @@ done
 
 
 # Import all Kibana saved objects and display count of successfully imported objects
-echo "Importing Kibana saved objects from elk-pensando/kibana..."
+echo "Importing Kibana saved objects from pensando-elk/kibana..."
 TOTAL_IMPORTED=0
 for FILE in kibana/*.ndjson; do
     while : ; do  #
