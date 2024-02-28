@@ -35,7 +35,8 @@ if ! command -v docker &>/dev/null; then
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo apt-get update
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose jq
+        #sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose jq
+        sudo apt-get install -y docker.io containerd.io docker-compose-plugin docker-compose jq
 fi
 
 # Fetch the available branches
