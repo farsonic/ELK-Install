@@ -46,7 +46,7 @@ bash <(curl -s https://raw.githubusercontent.com/farsonic/ELK-Install/main/unins
 
 ## Video Walkthrough
 
-[<img src="https://i.ytimg.com/vi/l8m24wa9JHo/maxresdefault.jpg" width="50%">](https://youtu.be/l8m24wa9JHo)
+https://www.youtube.com/watch?v=l8m24wa9JHo
 
 ## Disclaimer
 
