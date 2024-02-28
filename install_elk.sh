@@ -57,8 +57,11 @@ done
 echo "Selected branch: $BRANCH_NAME"
 
 # Clone the repository
-git clone -b $BRANCH_NAME https://gitlab.com/pensando/tbd/siem/elastic/elk-pensando.git
+#git clone -b $BRANCH_NAME https://gitlab.com/pensando/tbd/siem/elastic/elk-pensando.git
+git clone -b $BRANCH_NAME https://github.com/amd/pensando-elk.git
 cd elk-pensando
+
+
 
 # Set the Elastic version, with a default known functional version of 8.6.2
 read -p "Please enter the Elastic version you want to use (default: 8.6.2): " ELASTIC_VERSION
