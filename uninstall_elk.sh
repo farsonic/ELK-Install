@@ -15,8 +15,8 @@ if [[ "$(lsb_release -si)" != "Ubuntu" ]]; then
 fi
 
 # Stop the Docker containers
-if command -v docker-compose &>/dev/null && [ -f "./elk-pensando/docker-compose.yml" ]; then
-    cd elk-pensando
+if command -v docker-compose &>/dev/null && [ -f "./pensando-elk/docker-compose.yml" ]; then
+    cd pensando-elk
     docker-compose down
     cd ..
 fi
@@ -38,8 +38,8 @@ sudo rm /etc/apt/sources.list.d/docker.list
 cd 
 
 # Remove the cloned Git repository
-if [ -d "elk-pensando" ]; then
-    rm -rf elk-pensando
+if [ -d "pensando-elk" ]; then
+    rm -rf pensando-elk
 fi
 
 # Revert system changes
