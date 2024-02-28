@@ -21,8 +21,8 @@ if (( ROOT_DISK_SPACE < 500 )); then
 fi
 
 # Check if elk-pensando directory already exists
-if [ -d "elk-pensando" ]; then
-    echo "The directory elk-pensando already exists. Aborting the installation."
+if [ -d "pensando-elk" ]; then
+    echo "The directory pensando-elk already exists. Aborting the installation."
     exit 1
 fi
 
@@ -60,7 +60,7 @@ echo "Selected branch: $BRANCH_NAME"
 # Clone the repository
 #git clone -b $BRANCH_NAME https://gitlab.com/pensando/tbd/siem/elastic/elk-pensando.git
 git clone -b $BRANCH_NAME https://github.com/amd/pensando-elk.git
-cd elk-pensando
+cd pensando-elk
 
 
 
