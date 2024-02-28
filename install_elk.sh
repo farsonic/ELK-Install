@@ -39,8 +39,10 @@ if ! command -v docker &>/dev/null; then
 fi
 
 # Fetch the available branches
-BRANCHES=$(git ls-remote --heads https://gitlab.com/pensando/tbd/siem/elastic/elk-pensando | awk -F'/' '{print $3}')
+# BRANCHES=$(git ls-remote --heads https://gitlab.com/pensando/tbd/siem/elastic/elk-pensando | awk -F'/' '{print $3}')
+BRANCHES=$(git ls-remote --heads https://github.com/amd/pensando-elk | awk -F'/' '{print $3}')
 
+https://github.com/amd/pensando-elk
 while true; do
     select BRANCH_NAME in $BRANCHES; do
         if [[ -n $BRANCH_NAME ]]; then
