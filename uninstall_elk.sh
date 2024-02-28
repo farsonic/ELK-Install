@@ -21,6 +21,9 @@ if command -v docker-compose &>/dev/null && [ -f "./elk-pensando/docker-compose.
     cd ..
 fi
 
+#Blow away all images
+docker system prune -a
+
 # Remove the user from the Docker group
 sudo gpasswd -d $USER docker
 
