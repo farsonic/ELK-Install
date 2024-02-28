@@ -46,7 +46,7 @@ bash <(curl -s https://raw.githubusercontent.com/farsonic/ELK-Install/main/unins
 
 ## Video Walkthrough
 
-[<img src="[https://img.youtube.com/vi/l8m24wa9JHo/maxresdefault.jpg](https://i9.ytimg.com/vi/l8m24wa9JHo/mq3.jpg?sqp=COSe-64G-oaymwEmCMACELQB8quKqQMa8AEB-AHEBoAC4AOKAgwIhttps://i9.ytimg.com/vi/l8m24wa9JHo/mq3.jpg?sqp=COSe-64G-oaymwEmCMACELQB8quKqQMa8AEB-AHEBoAC4AOKAgwIABABGBMgTSh_MA8%3D&rs=AOn4CLAUjHirginRAk9UDliBCU6csvWxGA&retry=4ABABGBMgTSh_MA8%3D&rs=AOn4CLAUjHirginRAk9UDliBCU6csvWxGA&retry=4)https://i9.ytimg.com/vi/l8m24wa9JHo/mq3.jpg?sqp=COSe-64G-oaymwEmCMACELQB8quKqQMa8AEB-AHEBoAC4AOKAgwIhttps://i9.ytimg.com/vi/l8m24wa9JHo/mq3.jpg?sqp=COSe-64G-oaymwEmCMACELQB8quKqQMa8AEB-AHEBoAC4AOKAgwIABABGBMgTSh_MA8%3D&rs=AOn4CLAUjHirginRAk9UDliBCU6csvWxGA&retry=4ABABGBMgTSh_MA8%3D&rs=AOn4CLAUjHirginRAk9UDliBCU6csvWxGA&retry=4" width="50%">](https://youtu.be/l8m24wa9JHo)
+[<img src="https://i.ytimg.com/vi/l8m24wa9JHo/maxresdefault.jpg" width="50%">](https://youtu.be/l8m24wa9JHo)
 
 ## Disclaimer
 
