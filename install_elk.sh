@@ -66,7 +66,7 @@ cd pensando-elk
 
 # Set the Elastic version, with a default known functional version of 8.12.2
 read -p "Please enter the Elastic version you want to use (default: 8.12.2): " ELASTIC_VERSION
-ELASTIC_VERSION=${ELASTIC_VERSION:-8.6.2}
+ELASTIC_VERSION=${ELASTIC_VERSION:-8.12.2}
 echo "TAG=$ELASTIC_VERSION" > .env
 
 # Directory setup and permissions
