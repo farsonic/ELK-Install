@@ -58,11 +58,11 @@ fi
 read -p "Do you want to install the maxmind databases? (y/n): " INSTALL_MAXMIND
 if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     read -p "Enter your Maxmind API Key: " MAXMIND_API_KEY
-    
+
     # Downloading the files
     curl -o GeoLite2-ASN.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
     curl -o GeoLite2-City.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
-    
+
     # Modify the docker-compose.yml file
     sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_ENABLE: 'false'/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_ENABLE: 'true'/" docker-compose.yml
     sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_ENABLE: 'false'/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_ENABLE: 'true'/" docker-compose.yml
@@ -78,7 +78,7 @@ if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     # Get the user ID and group ID of the user running inside the container
     USER_ID=$(docker exec pensando-elastiflow id -u)
     GROUP_ID=$(docker exec pensando-elastiflow id -g)
-    
+
     # Untar the files in the elastiflow container as that user
     docker exec -u $USER_ID -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
     docker exec -u $USER_ID -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-City.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
@@ -117,7 +117,7 @@ if [[ "$LICENSE_ELASTIFLOW" == "y" ]]; then
 
 fi
 
-docker-compose up --detach
+docker-compose up -d
 
 # Wait for Elasticsearch to become available
 echo "Waiting for Elasticsearch to become available..."
@@ -137,9 +137,9 @@ done
 
 while : ; do
     RESPONSE=$(curl -s -XPOST -H 'Content-Type: application/json' 'http://localhost:9200/_license/start_trial?acknowledge=true')
-    
+
     ACKNOWLEDGED=$(echo "$RESPONSE" | jq -r '.acknowledged')
-    
+
     if [[ "$ACKNOWLEDGED" == "true" ]]; then
         echo "Elasticsearch trial license installed successfully."
         break
