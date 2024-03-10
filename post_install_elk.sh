@@ -109,8 +109,8 @@ fi
 
 read -p "Do you want to apply Elastiflow licensing? (y/n): " LICENSE_ELASTIFLOW
 if [[ "$LICENSE_ELASTIFLOW" == "y" ]]; then
-    read -p "Enter your RiskIQ Account Number: " ELASTIFLOW_ACCOUNT
-    read -p "Enter your RiskIQ License Key: " ELASTIFLOW_LICENSE_KEY
+    read -p "Enter your Elastiflow Account Number: " ELASTIFLOW_ACCOUNT
+    read -p "Enter your Elastiflow License Key: " ELASTIFLOW_LICENSE_KEY
     sed -i "s|#EF_ACCOUNT_ID: ''|EF_ACCOUNT_ID: '$ELASTIFLOW_ACCOUNT'|g" docker-compose.yml
     sed -i "s|#EF_FLOW_LICENSE_KEY: ''|EF_FLOW_LICENSE_KEY: '$ELASTIFLOW_LICENSE_KEY'|g" docker-compose.yml
 
