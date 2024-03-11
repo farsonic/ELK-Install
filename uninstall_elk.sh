@@ -17,7 +17,7 @@ fi
 # Stop the Docker containers
 if command -v docker-compose &>/dev/null && [ -f "./pensando-elk/docker-compose.yml" ]; then
     cd pensando-elk
-    docker-compose down
+    docker compose down
     cd ..
 fi
 
