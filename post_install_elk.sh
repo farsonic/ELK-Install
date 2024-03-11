@@ -59,7 +59,8 @@ if [[ "$CONFIGURE_DNS" == "y" ]]; then
     read -p "Enter your DNS Server IPs (Commar seperated): " DNS_SERVERS
     sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_DNS_ENABLE: 'false'/EF_PROCESSOR_ENRICH_IPADDR_DNS_ENABLE: 'true'/" docker-compose.yml
     sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_DNS_NAMESERVER_IP: ''/EF_PROCESSOR_ENRICH_IPADDR_DNS_NAMESERVER_IP: '$DNS_SERVERS'/" docker-compose.yml
-    
+fi
+
 read -p "Do you want to install the maxmind databases? (y/n): " INSTALL_MAXMIND
 if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     read -p "Enter your Maxmind API Key: " MAXMIND_API_KEY
