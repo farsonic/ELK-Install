@@ -117,7 +117,7 @@ if [[ "$LICENSE_ELASTIFLOW" == "y" ]]; then
 
 fi
 
-docker-compose up -d
+docker compose up -d
 
 # Wait for Elasticsearch to become available
 echo "Waiting for Elasticsearch to become available..."
