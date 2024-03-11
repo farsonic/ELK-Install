@@ -54,11 +54,16 @@ if [ "$COLLECT_IPFIX" == "y" ]; then
     sed -i "s/CHANGEME:9200/$SYSTEM_IP:9200/" docker-compose.yml
 fi
 
-
+read -p "Do you want to perform DNS Lookups? (y/n): " CONFIGURE_DNS
+if [[ "$CONFIGURE_DNS" == "y" ]]; then
+    read -p "Enter your DNS Server IPs (Commar seperated): " DNS_SERVERS
+    sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_DNS_ENABLE: 'false'/EF_PROCESSOR_ENRICH_IPADDR_DNS_ENABLE: 'true'/" docker-compose.yml
+    sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_DNS_NAMESERVER_IP: ''/EF_PROCESSOR_ENRICH_IPADDR_DNS_NAMESERVER_IP: '$DNS_SERVERS'/" docker-compose.yml
+    
 read -p "Do you want to install the maxmind databases? (y/n): " INSTALL_MAXMIND
 if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     read -p "Enter your Maxmind API Key: " MAXMIND_API_KEY
-
+    
     # Downloading the files
     curl -o GeoLite2-ASN.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
     curl -o GeoLite2-City.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
