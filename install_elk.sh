@@ -79,14 +79,7 @@ chmod -R 777 ./data
 sudo sysctl -w vm.max_map_count=262144
 echo vm.max_map_count=262144 | sudo tee -a /etc/sysctl.conf
 
-sudo groupadd docker
 sudo usermod -aG docker $(whoami)
-
-#sudo sh -eux <<EOF
-#apt-get install -y uidmap
-#EOF
-#dockerd-rootless-setuptool.sh install
-
 
 echo "Log out and back in to refresh groups, then run the post_install script. Remember to be in the elk_pensando directory"
 
