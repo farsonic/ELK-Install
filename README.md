@@ -5,6 +5,8 @@ This has been tested on Ubuntu Server and can't be said to work on other distrib
 been tested. 
 
 This script installs Docker Engine directly, ensure that your OS version meets the pre-requisits at Docker.com
+The most important thing is to ensure you have a supported Operating System, with all testing based on current Ubuntu versions. 
+
 
 https://docs.docker.com/engine/install/ubuntu/#prerequisites
 
