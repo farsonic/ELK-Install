@@ -61,36 +61,6 @@ if [[ "$CONFIGURE_DNS" == "y" ]]; then
     sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_DNS_NAMESERVER_IP: ''/EF_PROCESSOR_ENRICH_IPADDR_DNS_NAMESERVER_IP: '$DNS_SERVERS'/" docker-compose.yml
 fi
 
-read -p "Do you want to install the maxmind databases? (y/n): " INSTALL_MAXMIND
-if [[ "$INSTALL_MAXMIND" == "y" ]]; then
-    read -p "Enter your Maxmind API Key: " MAXMIND_API_KEY
-    
-    # Downloading the files
-    curl -o GeoLite2-ASN.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
-    curl -o GeoLite2-City.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
-
-    # Modify the docker-compose.yml file
-    sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_ENABLE: 'false'/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_ENABLE: 'true'/" docker-compose.yml
-    sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_ENABLE: 'false'/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_ENABLE: 'true'/" docker-compose.yml
-    sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_PATH: '/etc/elastiflow/maxmind/GeoLite2-City.mmdb'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_PATH: '/etc/elastiflow/maxmind/GeoLite2-City.mmdb'|" docker-compose.yml
-    sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_PATH: '/etc/elastiflow/maxmind/GeoLite2-ASN.mmdb'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_PATH: '/etc/elastiflow/maxmind/GeoLite2-ASN.mmdb'|" docker-compose.yml
-    sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_VALUES: 'city,country,country_code,location,timezone'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_VALUES: 'city,country,country_code,location,timezone'|" docker-compose.yml
-
-    # Create directory in elastiflow container and copy the files
-    docker exec -it pensando-elastiflow mkdir -p /etc/elastiflow/maxmind
-    docker cp GeoLite2-ASN.tar.gz pensando-elastiflow:/etc/elastiflow/maxmind/
-    docker cp GeoLite2-City.tar.gz pensando-elastiflow:/etc/elastiflow/maxmind/
-
-    # Get the user ID and group ID of the user running inside the container
-    USER_ID=$(docker exec pensando-elastiflow id -u)
-    GROUP_ID=$(docker exec pensando-elastiflow id -g)
-
-    # Untar the files in the elastiflow container as that user
-    docker exec -u $USER_ID -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
-    docker exec -u $USER_ID -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-City.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
-
-fi
-
 read -p "Do you want to install RiskIQ Components? (y/n): " INSTALL_RISKIQ
 if [[ "$INSTALL_RISKIQ" == "y" ]]; then
     #read -p "Enter your RiskIQ Account Number: " RISKIQ_ACCOUNT
@@ -155,6 +125,54 @@ while : ; do
     fi
 done
 
+
+
+
+EF_CONTAINER_RUNNING=$(docker inspect --format="{{.State.Running}}" pensando-elastiflow 2>/dev/null)
+
+if [ "$EF_CONTAINER_RUNNING" != "true" ]; then
+    echo "Starting the pensando-elastiflow container..."
+    docker-compose up -d pensando-elastiflow
+fi
+
+# Wait for the container to be fully started
+echo "Waiting for the pensando-elastiflow container to be ready..."
+while ! docker inspect --format="{{.State.Running}}" pensando-elastiflow 2>/dev/null | grep -q "true"; do
+    echo "Waiting for container to start..."
+    sleep 2
+done
+
+
+read -p "Do you want to install the maxmind databases? (y/n): " INSTALL_MAXMIND
+if [[ "$INSTALL_MAXMIND" == "y" ]]; then
+    read -p "Enter your Maxmind API Key: " MAXMIND_API_KEY
+    
+    # Downloading the files
+    curl -o GeoLite2-ASN.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
+    curl -o GeoLite2-City.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
+
+    # Modify the docker-compose.yml file
+    sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_ENABLE: 'false'/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_ENABLE: 'true'/" docker-compose.yml
+    sed -i "s/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_ENABLE: 'false'/EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_ENABLE: 'true'/" docker-compose.yml
+    sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_PATH: '/etc/elastiflow/maxmind/GeoLite2-City.mmdb'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_PATH: '/etc/elastiflow/maxmind/GeoLite2-City.mmdb'|" docker-compose.yml
+    sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_PATH: '/etc/elastiflow/maxmind/GeoLite2-ASN.mmdb'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_ASN_PATH: '/etc/elastiflow/maxmind/GeoLite2-ASN.mmdb'|" docker-compose.yml
+    sed -i "s|#EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_VALUES: 'city,country,country_code,location,timezone'|EF_PROCESSOR_ENRICH_IPADDR_MAXMIND_GEOIP_VALUES: 'city,country,country_code,location,timezone'|" docker-compose.yml
+
+    # Create directory in elastiflow container and copy the files
+    docker exec -it pensando-elastiflow mkdir -p /etc/elastiflow/maxmind
+    docker cp GeoLite2-ASN.tar.gz pensando-elastiflow:/etc/elastiflow/maxmind/
+    docker cp GeoLite2-City.tar.gz pensando-elastiflow:/etc/elastiflow/maxmind/
+
+    # Get the user ID and group ID of the user running inside the container
+    USER_ID=$(docker exec pensando-elastiflow id -u)
+    GROUP_ID=$(docker exec pensando-elastiflow id -g)
+
+    # Untar the files in the elastiflow container as that user
+    docker exec -u $USER_ID -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
+    docker exec -u $USER_ID -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-City.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
+
+    docker compose restart
+fi
 
 
 # Import all Kibana saved objects and display count of successfully imported objects
