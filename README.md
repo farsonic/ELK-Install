@@ -6,9 +6,7 @@ been tested.
 
 This script installs Docker Engine directly, ensure that your OS version meets the pre-requisits at Docker.com
 
-```
 https://docs.docker.com/engine/install/ubuntu/#prerequisites
-```
 
 ## Initial software installation
 To install the ELK-Pensando stack execute the following script as a non root user that has sudo access. 
