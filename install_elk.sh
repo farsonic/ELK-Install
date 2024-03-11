@@ -1,4 +1,5 @@
 #!/bin/bash
+CURRENT_USER=$(whoami)
 
 # Ensure the script is being run on Ubuntu
 if [[ "$(lsb_release -si)" != "Ubuntu" ]]; then
@@ -60,11 +61,8 @@ done
 echo "Selected branch: $BRANCH_NAME"
 
 # Clone the repository
-#git clone -b $BRANCH_NAME https://gitlab.com/pensando/tbd/siem/elastic/elk-pensando.git
 git clone -b $BRANCH_NAME https://github.com/amd/pensando-elk.git
 cd pensando-elk
-
-
 
 # Set the Elastic version, with a default known functional version of 8.12.2
 read -p "Please enter the Elastic version you want to use (default: 8.12.2): " ELASTIC_VERSION
@@ -72,8 +70,11 @@ ELASTIC_VERSION=${ELASTIC_VERSION:-8.12.2}
 echo "TAG=$ELASTIC_VERSION" > .env
 
 # Directory setup and permissions
+#mkdir -p ./data/es_backups ./data/pensando_es ./data/elastiflow
+#chmod -R 777 ./data
 mkdir -p ./data/es_backups ./data/pensando_es ./data/elastiflow
-chmod -R 777 ./data
+chown -R "$CURRENT_USER":docker ./data
+
 
 # Update vm.max_map_count for Elasticsearch
 sudo sysctl -w vm.max_map_count=262144
