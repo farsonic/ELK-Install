@@ -95,6 +95,7 @@ fi
 
 docker compose up -d
 
+clear
 # Wait for Elasticsearch to become available
 echo "Waiting for Elasticsearch to become available..."
 while ! curl -s "http://localhost:9200/" &>/dev/null; do
@@ -125,27 +126,18 @@ while : ; do
     fi
 done
 
-
-
-
-EF_CONTAINER_RUNNING=$(docker inspect --format="{{.State.Running}}" pensando-elastiflow 2>/dev/null)
-
-if [ "$EF_CONTAINER_RUNNING" != "true" ]; then
-    echo "Starting the pensando-elastiflow container..."
-    docker-compose up -d pensando-elastiflow
-fi
-
-# Wait for the container to be fully started
+clear
 echo "Waiting for the pensando-elastiflow container to be ready..."
 while ! docker inspect --format="{{.State.Running}}" pensando-elastiflow 2>/dev/null | grep -q "true"; do
     echo "Waiting for container to start..."
     sleep 2
 done
 
+echo "The pensando-elastiflow container is now running."
 
-read -p "Do you want to install the maxmind databases? (y/n): " INSTALL_MAXMIND
+read -p "Do you want to install the MaxMind databases? (y/n): " INSTALL_MAXMIND
 if [[ "$INSTALL_MAXMIND" == "y" ]]; then
-    read -p "Enter your Maxmind API Key: " MAXMIND_API_KEY
+    read -p "Enter your MaxMind API Key: " MAXMIND_API_KEY
     
     # Downloading the files
     curl -o GeoLite2-ASN.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=$MAXMIND_API_KEY&suffix=tar.gz"
@@ -171,8 +163,12 @@ if [[ "$INSTALL_MAXMIND" == "y" ]]; then
     docker exec -u $USER_ID -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-ASN.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
     docker exec -u $USER_ID -it pensando-elastiflow bash -c "tar -xzf /etc/elastiflow/maxmind/GeoLite2-City.tar.gz --strip-components 1 -C /etc/elastiflow/maxmind/"
 
+    # You should use "docker compose restart" only if you are using Docker Compose v2
+    # For Docker Compose v1, use "docker-compose restart"
     docker compose restart
 fi
+
+
 
 
 # Import all Kibana saved objects and display count of successfully imported objects
