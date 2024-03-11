@@ -15,7 +15,7 @@ if [[ "$(lsb_release -si)" != "Ubuntu" ]]; then
 fi
 
 # Stop the Docker containers
-if command -v docker-compose &>/dev/null && [ -f "./pensando-elk/docker-compose.yml" ]; then
+if command -v docker &>/dev/null && [ -f "./pensando-elk/docker-compose.yml" ]; then
     cd pensando-elk
     docker compose down
     cd ..
