@@ -42,6 +42,11 @@ if ! command -v docker &>/dev/null; then
     sudo apt -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin jq
 fi
 
+#Start Docker
+sudo service docker start
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
+
 # Fetch the available branches
 # BRANCHES=$(git ls-remote --heads https://gitlab.com/pensando/tbd/siem/elastic/elk-pensando | awk -F'/' '{print $3}')
 BRANCHES=$(git ls-remote --heads https://github.com/amd/pensando-elk | awk -F'/' '{print $3}')
